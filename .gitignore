@@ -1,0 +1,12 @@
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
+
+.#init.el
+elpa/
+evil/
+projectile-bookmarks.eld
+url/
