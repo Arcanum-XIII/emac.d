@@ -1,3 +1,18 @@
+;;; init.el --- custom init
+
+;;; Commentary:
+;;; Use Evil for modal editing,
+;;; Helm to provide a better minibuffer
+;;; Cider for Clojure, complete with hooks and boot support
+;;; Smartparens for pair completion/handling
+;;; Company for autocompletion
+;;; Flycheck for basic code linting
+;;; Projectile for project management
+;;; slime/sbcl configuration
+;;; Zenburn as theme. Because.
+
+;;; Code:
+
 (prefer-coding-system 'utf-8)
 (add-to-list 'exec-path "/usr/local/bin")
 (load (expand-file-name "~/.emacs.d/keymaps.el"))
@@ -6,9 +21,6 @@
     (set-frame-size (selected-frame) 172 60))
 
 (tool-bar-mode -1)
-
-
-
 
 ;; add Melpa to the package source
 (when (>= emacs-major-version 24)
@@ -140,12 +152,10 @@
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "sbcl")
 
-(global-set-key (kbd "M-v") 'clipboard-yank)
-(global-set-key (kbd "M-c") 'clipboard-kill-ring-save)
-
-
 ;; put backup file in the temp directory... avoid so many complication.
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+
+(provide 'init)\n;;; init.el ends here
