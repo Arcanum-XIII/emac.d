@@ -16,6 +16,7 @@
 (prefer-coding-system 'utf-8)
 (add-to-list 'exec-path "/usr/local/bin")
 (load (expand-file-name "~/.emacs.d/keymaps.el"))
+(load (expand-file-name "~/.emacs.d/org.el"))
 
 (when (display-graphic-p)
     (set-frame-size (selected-frame) 172 60))
@@ -96,8 +97,10 @@
 (add-to-list 'load-path "~/.emacs.d/evil")  
 (require 'evil)  
 (evil-mode 1)
+;; Deactivate evil mode for some buffer. Can be quite annoying.
 (add-hook 'term-mode-hook 'evil-emacs-state)
 (add-hook 'repl-mode-hook 'evil-emacs-state)
+(add-hook 'paradox-menu-mode-hook 'evil-emacs-state)
 (add-hook 'cider-repl-mode-hook 'evil-emacs-state)
 
 ;; YASNippet
@@ -141,7 +144,8 @@
  '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes
    (quote
-    ("cbef37d6304f12fb789f5d80c2b75ea01465e41073c30341dc84c6c0d1eb611d" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default))))
+    ("68d36308fc6e7395f7e6355f92c1dd9029c7a672cbecf8048e2933a053cf27e6" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" "f5eb916f6bd4e743206913e6f28051249de8ccfd070eae47b5bde31ee813d55f" "11636897679ca534f0dec6f5e3cb12f28bf217a527755f6b9e744bd240ed47e1" "19352d62ea0395879be564fc36bc0b4780d9768a964d26dfae8aad218062858d" "a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "2e5705ad7ee6cfd6ab5ce81e711c526ac22abed90b852ffaf0b316aa7864b11f" "95a6ac1b01dcaed4175946b581461e16e1b909d354ada79770c0821e491067c6" "b06aaf5cefc4043ba018ca497a9414141341cb5a2152db84a9a80020d35644d1" "3dafeadb813a33031848dfebfa0928e37e7a3c18efefa10f3e9f48d1993598d3" "6a9606327ecca6e772fba6ef46137d129e6d1888dcfc65d0b9b27a7a00a4af20" "989829fc49ea2643a4e018bf8e082a92b25f2d76b18754db5f47d0e40c611386" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "3c093ea152d7185cc78b61b05e52648c6d2fb0d8579c2119d775630fa459e0be" "cbef37d6304f12fb789f5d80c2b75ea01465e41073c30341dc84c6c0d1eb611d" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -158,4 +162,4 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(provide 'init)\n;;; init.el ends here
+(provide 'init) ;;; init.el ends here

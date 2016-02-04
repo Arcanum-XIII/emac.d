@@ -10,4 +10,4 @@
 (global-set-key (kbd "M-v") 'clipboard-yank)
 (global-set-key (kbd "M-c") 'clipboard-kill-ring-save)
 
-(provide 'keymaps)\n;;; keymaps.el ends here
+(provide 'keymaps) ;;; keymaps.el ends here
