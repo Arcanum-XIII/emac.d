@@ -1,6 +1,7 @@
 ;;; init.el --- custom init
 
 ;;; Commentary:
+;;; use-package for configuration and ensuring everything is loaded/dowloaded
 ;;; Use Evil for modal editing,
 ;;; Helm to provide a better minibuffer
 ;;; Cider for Clojure, complete with hooks and boot support
@@ -9,7 +10,7 @@
 ;;; Flycheck for basic code linting
 ;;; Projectile for project management
 ;;; slime/sbcl configuration
-;;; Zenburn as theme. Because.
+;;; Zenburn as theme.
 
 ;;; Code:
 
@@ -31,13 +32,13 @@
 )
 
 ;; init packages
-(setq packages-list '(avy avy cider seq spinner queue pkg-info epl clojure-mode cider clj-refactor hydra inflections edn s peg dash cider seq spinner queue pkg-info epl clojure-mode multiple-cursors paredit yasnippet dash s clj-refactor clojure-mode clojure-mode company company evil goto-chg undo-tree evil flycheck seq let-alist pkg-info epl dash flycheck haskell-mode haskell-mode helm helm-core async popup async helm-core async hydra hydra markdown-mode markdown-mode org org paradox hydra spinner let-alist seq paradox projectile pkg-info epl dash projectile use-package diminish bind-key use-package yasnippet yasnippet ace-jump-mode ack cider-browse-ns cider seq spinner queue pkg-info epl clojure-mode cider-decompile javap-mode cider seq spinner queue pkg-info epl clojure-mode cider-spy dash cider seq spinner queue pkg-info epl clojure-mode cider-tracing clojure-mode cider seq spinner queue pkg-info epl clojure-mode clj-refactor hydra inflections edn s peg dash cider seq spinner queue pkg-info epl clojure-mode multiple-cursors paredit yasnippet dash s clojure-snippets yasnippet company-cider cider seq spinner queue pkg-info epl clojure-mode company edn s peg dash evil-easymotion avy evil-smartparens smartparens dash evil goto-chg undo-tree f dash s fish-mode goto-chg haskell-mode helm-ack helm helm-core async async helm-company company helm helm-core async async helm-flycheck helm helm-core async async flycheck seq let-alist pkg-info epl dash dash helm-projectile dash projectile pkg-info epl dash helm helm-core async async inflections javap-mode markdown-mode multiple-cursors noflet org paradox hydra spinner let-alist seq paredit peg projectile pkg-info epl dash pungi pyvenv jedi auto-complete popup jedi-core python-environment deferred epc ctable concurrent deferred python-environment deferred pyvenv queue rainbow-delimiters rust-mode s seq smartparens dash spinner undo-tree use-package diminish bind-key yaml-mode yasnippet zenburn-theme))
+(setq packages-list '(dash undo-tree flycheck haskell-mode helm markdown-mode org paradox projectile use-package ace-jump-mode ack cider clj-refactor clojure-snippets company evil-easymotion evil-smartparens smartparens fish-mode helm-ack helm-company helm-flycheck helm-projectile jedi rainbow-delimiters rust-mode yaml-mode zenburn-theme))
 
 (unless package-archive-contents
-    (package-refresh-contents))
+  (package-refresh-contents))
 (dolist (package packages-list)
-    (unless (package-installed-p package)
-          (package-install package))) 
+  (unless (package-installed-p package)
+    (package-install package))) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PACKAGE: helm              ;;
@@ -94,47 +95,71 @@
 (helm-mode 1)
 
 ;; Evil mode
-(add-to-list 'load-path "~/.emacs.d/evil")  
-(require 'evil)  
-(evil-mode 1)
-;; Deactivate evil mode for some buffer. Can be quite annoying.
-(add-hook 'term-mode-hook 'evil-emacs-state)
-(add-hook 'repl-mode-hook 'evil-emacs-state)
-(add-hook 'paradox-menu-mode-hook 'evil-emacs-state)
-(add-hook 'cider-repl-mode-hook 'evil-emacs-state)
+(use-package evil
+  :ensure t
+  :init
+  ;; Deactivate evil mode for some buffer. Can be quite annoying.
+  (add-hook 'term-mode-hook 'evil-emacs-state)
+  (add-hook 'repl-mode-hook 'evil-emacs-state)
+  (add-hook 'paradox-menu-mode-hook 'evil-emacs-state)
+  (add-hook 'cider-repl-mode-hook 'evil-emacs-state)
+  :config
+   (evil-mode 1))
 
 ;; YASNippet
-
-(require 'yasnippet)
-(yas-global-mode 1)
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
 
 ;; improved autocompletion mechanism
-(add-hook 'after-init-hook 'global-company-mode)
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
 
 ;; better linter
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(use-package flycheck
+  :ensure t
+  :init
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; Projectile : project handling
-(projectile-global-mode)
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-global-mode))
 
 ;; SmartParens : alternative to paredit
-(load (expand-file-name "~/.emacs.d/SP.el"))
+(use-package smartparens
+    :config
+    (require 'smartparens-config)
+    (smartparens-global-mode t)
+    (load (expand-file-name "~/.emacs.d/SP.el")))
 
-;; rainbow-delimiters 
-
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(use-package rainbow-delimiters
+  :ensure t
+  :init 
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;; related to Cider (clojure mode)
-(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
-(add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-(add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
-(show-smartparens-global-mode +1)
+(use-package cider
+  :ensure t
+  :init
+  (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
+  (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+  (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
+  :config
+  (show-smartparens-global-mode +1))
 
-(require 'clj-refactor)
-(add-hook 'clojure-mode-hook (lambda ()
-                               (clj-refactor-mode 1)
-                               ;; insert keybinding setup here
-                               ))
+(use-package clj-refactor
+  :ensure t
+  :config
+  (require 'clj-refactor)
+  (add-hook 'clojure-mode-hook (lambda ()
+				 (clj-refactor-mode 1)
+				 ;; insert keybinding setup here
+				 )))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -144,7 +169,7 @@
  '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes
    (quote
-    ("68d36308fc6e7395f7e6355f92c1dd9029c7a672cbecf8048e2933a053cf27e6" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" "f5eb916f6bd4e743206913e6f28051249de8ccfd070eae47b5bde31ee813d55f" "11636897679ca534f0dec6f5e3cb12f28bf217a527755f6b9e744bd240ed47e1" "19352d62ea0395879be564fc36bc0b4780d9768a964d26dfae8aad218062858d" "a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "2e5705ad7ee6cfd6ab5ce81e711c526ac22abed90b852ffaf0b316aa7864b11f" "95a6ac1b01dcaed4175946b581461e16e1b909d354ada79770c0821e491067c6" "b06aaf5cefc4043ba018ca497a9414141341cb5a2152db84a9a80020d35644d1" "3dafeadb813a33031848dfebfa0928e37e7a3c18efefa10f3e9f48d1993598d3" "6a9606327ecca6e772fba6ef46137d129e6d1888dcfc65d0b9b27a7a00a4af20" "989829fc49ea2643a4e018bf8e082a92b25f2d76b18754db5f47d0e40c611386" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "3c093ea152d7185cc78b61b05e52648c6d2fb0d8579c2119d775630fa459e0be" "cbef37d6304f12fb789f5d80c2b75ea01465e41073c30341dc84c6c0d1eb611d" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+    ("20e359ef1818a838aff271a72f0f689f5551a27704bf1c9469a5c2657b417e6c" "68d36308fc6e7395f7e6355f92c1dd9029c7a672cbecf8048e2933a053cf27e6" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" "f5eb916f6bd4e743206913e6f28051249de8ccfd070eae47b5bde31ee813d55f" "11636897679ca534f0dec6f5e3cb12f28bf217a527755f6b9e744bd240ed47e1" "19352d62ea0395879be564fc36bc0b4780d9768a964d26dfae8aad218062858d" "a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" "2e5705ad7ee6cfd6ab5ce81e711c526ac22abed90b852ffaf0b316aa7864b11f" "95a6ac1b01dcaed4175946b581461e16e1b909d354ada79770c0821e491067c6" "b06aaf5cefc4043ba018ca497a9414141341cb5a2152db84a9a80020d35644d1" "3dafeadb813a33031848dfebfa0928e37e7a3c18efefa10f3e9f48d1993598d3" "6a9606327ecca6e772fba6ef46137d129e6d1888dcfc65d0b9b27a7a00a4af20" "989829fc49ea2643a4e018bf8e082a92b25f2d76b18754db5f47d0e40c611386" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "3c093ea152d7185cc78b61b05e52648c6d2fb0d8579c2119d775630fa459e0be" "cbef37d6304f12fb789f5d80c2b75ea01465e41073c30341dc84c6c0d1eb611d" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
  '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -153,7 +178,7 @@
  ;; If there is more than one, they won't work right.
  )
 
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
+;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "sbcl")
 
 ;; put backup file in the temp directory... avoid so many complication.
@@ -162,4 +187,5 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(provide 'init) ;;; init.el ends here
+(provide 'init)
+;;; init.el ends here
