@@ -98,6 +98,16 @@
 
   (helm-mode 1))
 
+;; magit
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
+
+(use-package relative-line-numbers
+  :ensure t
+  :config
+  (global-relative-line-numbers-mode))
+
 ;; Evil mode
 (use-package evil
   :ensure t
@@ -109,6 +119,8 @@
   (add-hook 'cider-repl-mode-hook 'evil-emacs-state)
   :config
   (use-package evil-easymotion
+    :ensure t)
+  (use-package evil-magit
     :ensure t)
   (evil-mode 1))
 
