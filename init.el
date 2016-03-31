@@ -28,11 +28,10 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t))
 
-;; init packages
-(setq packages-list '(dash undo-tree org use-package clojure-snippets zenburn-theme))
+;; init packages that can't be maintained with use-package
+(setq packages-list '(org use-package zenburn-theme))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -128,7 +127,9 @@
 (use-package yasnippet
   :ensure t
   :config
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  (use-package clojure-snippets
+    :ensure t))
 
 ;; improved autocompletion mechanism
 (use-package company
@@ -188,12 +189,6 @@
 				 ;; insert keybinding setup here
 				 )))
 
-(use-package ack
-  :ensure t
-  :config
-  (use-package helm-ack
-    :ensure t))
-
 (use-package rainbow-delimiters
   :ensure t) 
 
@@ -201,6 +196,8 @@
 (use-package jedi
   :ensure t)
 (use-package haskell-mode
+  :ensure t)
+(use-package erlang
   :ensure t)
 (use-package rust-mode
   :ensure t)
@@ -211,10 +208,20 @@
 (use-package fish-mode
   :ensure t)
 
+;; various usefull package 
 (use-package ace-jump-mode
   :ensure t) 
 
-;; dash undo-tree org paradox clojure-snippets zenburn-theme
+(use-package ack
+  :ensure t
+  :config
+  (use-package helm-ack
+    :ensure t))
+
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -244,3 +251,4 @@
 
 (provide 'init)
 ;;; init.el ends here
+
