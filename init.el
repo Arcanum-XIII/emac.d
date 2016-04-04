@@ -55,18 +55,19 @@
   ;; prefix "C-x c", which is inconvenient because you can
   ;; accidentially pressed "C-x C-c"
   (setq helm-command-prefix-key "C-c h")
+  :bind (:map helm-map
+	      ("<tab>" . helm-execute-persistent-action) ; rebihnd tab to do persistent action
+	      ( "C-i" . helm-execute-persistent-action) ; make TAB works in terminal
+	      ("C-z" . helm-select-action) ; list actions using C-z
+	      :map helm-grep-mode-map 
+	      ("<return>" . helm-grep-mode-jump-other-window)
+	      ("n" . helm-grep-mode-jump-other-window-forward)
+	      ("p" . helm-grep-mode-jump-other-window-backward))
   :config
   (require 'helm-config)
   (require 'helm-eshell)
   (require 'helm-files)
   (require 'helm-grep)
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-  (define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
-  (define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
-  (define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
   (setq
    helm-google-suggest-use-curl-p t
    helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
