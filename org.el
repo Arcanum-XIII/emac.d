@@ -1,3 +1,6 @@
+;;; org.el -- config for org-mode
+;;; Commentary:
+;;; Code
 (setq org-todo-keywords
        '((sequence "TODO" "DOING" "DONE")))
 
@@ -10,3 +13,4 @@
  'org-babel-load-languages
  '((dot . t)))
 (provide 'org)
+;;; org.el ends here
